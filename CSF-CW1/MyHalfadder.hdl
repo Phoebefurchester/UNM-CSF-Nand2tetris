@@ -1,0 +1,9 @@
+CHIP MyHalfadder{
+IN a,b;
+OUT sum, carry;
+
+PARTS:
+// Put your implementation here.
+    Xor(a=a, b=b, out=sum);//sum output
+    And(a=a, b=b, out=carry);//carry output
+}

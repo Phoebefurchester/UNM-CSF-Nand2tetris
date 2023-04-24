@@ -1,0 +1,116 @@
+
+/**
+ * The MyALU. is the ALU of YOUR OWN design that provides the same functions as in the Nand2Tetris project + additional functions (and uses different control bits.
+ * Computes one of the following functions:
+ * x+y, x-y, y-x, 0, 1, -1, x, y, -x, -y, !x, !y,
+ * x+1, y+1, x-1, y-1, x&y, x|y , x XOR y, on two 16-bit inputs, 
+ * according to 6 input bits denoted zx,nx,zy,ny,f,no.
+ * In addition, the ALU computes two 1-bit outputs:
+ * if the ALU output == 0, zr is set to 1; otherwise zr is set to 0;
+ * if the ALU output < 0, ng is set to 1; otherwise ng is set to 0.
+ */
+
+// Implementation: the ALU logic manipulates the x and y inputs
+
+
+CHIP MyALU {
+    IN  
+        x[16], y[16],  // 16-bit inputs        
+        C0, // Control Bit 0 (Least significant) 
+        C1, // Control Bit 1
+        C2, // Control Bit 2
+        C3,  // Control Bit 3
+		C4;  // Control Bit 4 (Most significant - 5th Control bit)
+        
+
+    OUT 
+        out[16], // 16-bit output
+        zr, // 1 if (out == 0), 0 otherwise
+        ng; // 1 if (out < 0),  0 otherwise
+
+    PARTS:
+   // Put you code here:
+
+   //0->0 (false)
+
+   //1->1
+   Inc16(in=false, out=in1);
+
+   //2->-1 (true)
+
+   //3->x
+
+   //4->y
+
+   //5->x'
+   Not16(in=x, out=in5);
+
+   //6->y'
+   Not16(in=y, out=in6);
+
+   //7->-x
+   Inc16(in=in5, out=in7);
+
+   //8->-y
+   Inc16(in=in6, out=in8);
+
+   //9->x+1
+   Inc16(in=x, out=in9);
+
+   //10->y+1
+   Inc16(in=y, out=in10);
+
+   //11->x-1
+   Add16(a=x, b=true, out=in11);
+
+   //12->y-1
+   Add16(a=y, b=true, out=in12);
+
+   //13->x+y
+   Add16(a=x, b=y, out=in13);
+
+   //14->x-y
+   Add16(a=x, b=in8, out=in14);
+
+   //15->y-x
+   Add16(a=y, b=in7, out=in15);
+
+   //16-> x and y
+   And16(a=x, b=y, out=in16);
+
+   //17-> x or y
+   Or16(a=x, b=y, out=in17);
+
+   //18-> x xor y
+   Xor16(a=x, b=y, out=in18);
+
+   //C0 and C1
+   //0..3
+   Mux4Way16(a=false, b=in1, c=true, d=x, sel[0]=C0, sel[1]=C1, out=muxout1);
+   //4..17
+   Mux4Way16(a=y, b=in5, c=in6, d=in7, sel[0]=C0, sel[1]=C1, out=muxout2);
+   //8..11
+   Mux4Way16(a=in8, b=in9, c=in10, d=in11, sel[0]=C0, sel[1]=C1, out=muxout3);
+   //12..15
+   Mux4Way16(a=in12, b=in13, c=in14, d=in15, sel[0]=C0, sel[1]=C1, out=muxout4);
+   //16..18, 19 is not used
+   Mux4Way16(a=in16, b=in17, c=in18, d=false, sel[0]=C0, sel[1]=C1, out=muxout5);
+
+   //C2
+   Mux16(a=muxout1, b=muxout2, sel=C2, out=muxout6);
+   Mux16(a=muxout3, b=muxout4, sel=C2, out=muxout7);
+
+   //C3
+   Mux16(a=muxout6, b=muxout7, sel=C3, out=muxout8);
+
+   //C4 
+   //ng and zr
+   Mux16(a=muxout8, b=muxout5, sel=C4, out[15]=ng, out[0..7]=zrlow, out[8..15]=zrhigh, out=out);
+
+   //zr
+   Or8Way(in=zrlow, out=orout1);
+   Or8Way(in=zrhigh, out=orout2);
+   Or(a=orout1, b=orout2, out=orout3);
+   Not(in=orout3, out=zr);
+
+}

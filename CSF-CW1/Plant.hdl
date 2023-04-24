@@ -1,0 +1,32 @@
+CHIP Plant{
+IN A,B,C;
+OUT F;
+
+PARTS:
+// Put your implementation here.
+    Not(in=A, out=notA);
+    Not(in=C, out=notC);
+    And(a=notA, b=C, out=and1);
+    And(a=B, b=notC, out=and2);
+    Or(a=and1, b=and2, out=F);
+}
+
+//Boolean function:-
+//F(A,B,C)=A'B'C+A'BC'+A'BC+ABC'
+
+//Simplification:-
+//F(A,B,C)=A'B'C+A'BC'+A'BC+ABC'
+//        =A'B'C+A'BC+A'BC'+ABC'   Commutative law
+//        =A'C(B'+B)+A'BC'+ABC'    Distributive law
+//        =A'C(1)+A'BC'+ABC'       Complement law
+//        =A'C+A'BC'+ABC'          Identity law
+//        =A'(BC'+C)+ABC'          Distributive law
+//        =A'(B+C)+ABC'            Absorption law
+//        =A'B+A'C+ABC'
+//        =A'C+B(AC'+A')           Distributive law
+//        =A'C+B(C'+A')            Absorption law
+//        =A'C+BC'+BA'
+//        =A'C+BC'                 Consensus(redundant)
+
+
+

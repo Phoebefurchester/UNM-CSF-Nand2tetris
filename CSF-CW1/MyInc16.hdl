@@ -1,0 +1,12 @@
+CHIP MyInc16 {
+    IN in[16];
+    OUT out[16];
+
+    PARTS:
+// Put your implementation here.
+    Add16(a=in, b[0]=true, out=out);
+}
+//Add16(a[0..15]=in[0..15], b[0]=true, b[1..15]=false, out[0..15]=out[0..15]);
+//out = in + 1 (16-bit addition).
+//b[0] must be = 1(true) since it is performing an addition
+//0 = false

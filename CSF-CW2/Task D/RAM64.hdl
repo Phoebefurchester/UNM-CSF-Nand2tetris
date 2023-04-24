@@ -1,0 +1,35 @@
+// This file is adapted from part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+
+/**
+ * Memory of 64 registers, each 8 bit-wide. Out holds the value
+ * stored at the memory location specified by address. If load==1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out from the next time step onward).
+ */
+
+CHIP RAM64 {
+    IN in[8], load, address[6];
+    OUT out[8];
+
+    PARTS:
+    //2 combinational gate, 8*RAM8
+    DMux8Way(in=load, sel=address[0..2], a=a, b=b, c=c, d=d, e=e, f=f, g=g, h=h);
+    //use DMux8way to determine which RAM8 is being written to
+    //address[0..2] are the most significant bits (for RAM8s) and address[3..5] are the bits for the registers (least significant bits) 
+
+    //8 RAM8
+    RAM8(in=in, load=a, address=address[3..5], out=aout);
+    RAM8(in=in, load=b, address=address[3..5], out=bout);
+    RAM8(in=in, load=c, address=address[3..5], out=cout);
+    RAM8(in=in, load=d, address=address[3..5], out=dout);
+    RAM8(in=in, load=e, address=address[3..5], out=eout);
+    RAM8(in=in, load=f, address=address[3..5], out=fout);
+    RAM8(in=in, load=g, address=address[3..5], out=gout);
+    RAM8(in=in, load=h, address=address[3..5], out=hout);
+
+    //use Mux8Way8 to determine which RAM8 to output from
+    Mux8Way8(a=aout, b=bout, c=cout, d=dout, e=eout, f=fout, g=gout, h=hout, sel=address[0..2], out=out);
+
+}

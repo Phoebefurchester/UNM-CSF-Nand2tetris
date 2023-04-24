@@ -1,0 +1,12 @@
+CHIP MyFulladder{
+IN a,b,c;
+OUT sum, carry;
+
+PARTS:
+// Put your implementation here.
+    Xor(a=a, b=b, out=xorout);
+    Xor(a=xorout, b=c, out=sum);
+    And(a=c, b=xorout, out=and1);
+    And(a=b, b=a, out=and2);
+    Or(a=and1, b=and2, out=carry);
+}

@@ -1,0 +1,10 @@
+CHIP MyAnd{
+IN a,b;
+OUT out;
+
+PARTS:
+// Put your implementation here.
+    Nand(a=a, b=b, out=innerout);
+    Not(in=innerout, out=out);
+
+}
